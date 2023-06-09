@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -10,16 +11,15 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   parserOptions: {
+    ecmaVersion: 2021,
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 12,
-    sourceType: 'module',
   },
   plugins: ['react', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 'off',
-    // allow jsx syntax in js files (for next.js project)
     'react/jsx-filename-extension': [1, {extensions: ['.js', '.jsx']}],
   },
 };
