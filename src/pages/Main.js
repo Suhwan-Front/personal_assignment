@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {useEffect} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 
@@ -10,6 +11,11 @@ const Main = () => {
     localStorage.removeItem('jwt');
     navigate('/signin');
   };
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt'); // JWT 토큰 가져오기
+    console.log(`로컬 스토리지 저장 : ${jwt}`);
+  });
 
   useEffect(() => {
     if (

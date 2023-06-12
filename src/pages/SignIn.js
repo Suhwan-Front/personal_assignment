@@ -26,6 +26,11 @@ const SignIn = () => {
   });
 
   useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    console.log(`로컬 스토리지에 저장 : ${jwt}`);
+  }, []);
+
+  useEffect(() => {
     checkLoginForm();
   }, [email, password]);
 
@@ -48,11 +53,15 @@ const SignIn = () => {
         },
       );
       console.log(`서버로부터 응답 : ${response.data}`);
-      const jwt = response.data.jwt;
+      const jwt = response.data.access_token;
 
-      localStorage.setItem('jwt', jwt);
-      console.log(`로컬 스토리지 저장 : ${localStorage.getItem('jwt')}`);
-      navigate('/');
+      if (jwt) {
+        localStorage.setItem('jwt', jwt);
+        console.log(`로컬 스토리지 저장 : ${localStorage.getItem('jwt')}`);
+        navigate('/');
+      } else {
+        console.error('JWT 값을 가져오지 못했음');
+      }
     } catch (error) {
       console.error(error);
     }
