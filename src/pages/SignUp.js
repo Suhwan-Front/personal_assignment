@@ -1,7 +1,8 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -15,6 +16,14 @@ const SignUp = () => {
     const passwordCheck = password.length >= 8;
     setButtonDisable(!(emailCheck && passwordCheck));
   };
+
+  useEffect(() => {
+    const loginCheck = localStorage.getItem('jwt');
+    if (loginCheck) {
+      alert('이미 로그인 하셨습니다!');
+      navigate('/');
+    }
+  });
 
   useEffect(() => {
     checkForm();
@@ -46,6 +55,7 @@ const SignUp = () => {
   };
   return (
     <>
+      <Link to="/">메인 페이지</Link>
       <div>회원가입 페이지</div>
       <form onSubmit={handleSignUp}>
         <input

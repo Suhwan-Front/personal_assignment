@@ -1,26 +1,89 @@
-import {useState} from 'react';
+/* eslint-disable no-alert */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-console */
+import axios from 'axios';
+import {useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 
 const SignIn = () => {
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  const [email, setLoginEmail] = useState('');
+  const [password, setLoginPassword] = useState('');
+  const [loginButtonDisable, setLoginButtonDisable] = useState(true);
+  const navigate = useNavigate();
+
+  const checkLoginForm = () => {
+    const loginEmailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const loginPasswordCheck = password.length >= 8;
+    setLoginButtonDisable(!(loginEmailCheck && loginPasswordCheck));
+  };
+
+  useEffect(() => {
+    const loginCheck = localStorage.getItem('jwt');
+    if (loginCheck) {
+      alert('이미 로그인 하셨습니다!');
+      navigate('/');
+    }
+  });
+
+  useEffect(() => {
+    checkLoginForm();
+  }, [email, password]);
+
+  const handleLogin = async e => {
+    e.preventDefault();
+
+    const loginData = {
+      email,
+      password,
+    };
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/auth/signin',
+        loginData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log(`서버로부터 응답 : ${response.data}`);
+      const jwt = response.data.jwt;
+
+      localStorage.setItem('jwt', jwt);
+      console.log(`로컬 스토리지 저장 : ${localStorage.getItem('jwt')}`);
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
+      <Link to="/">
+        <button>메인 페이지</button>
+      </Link>
       <div>로그인 페이지</div>
-      <form>
+      <form onSubmit={handleLogin}>
         <input
           type="email"
-          value={loginEmail}
-          onChange={setLoginEmail(e => e.target.value)}
+          value={email}
+          onChange={e => setLoginEmail(e.target.value)}
           data-testid="email-input"
         />
         <input
           type="password"
-          value={loginPassword}
-          onChange={setLoginPassword(e => e.target.value)}
+          value={password}
+          onChange={e => setLoginPassword(e.target.value)}
           data-testid="password-input"
         />
-        <button data-testid="signup-button">로그인</button>
+        <button
+          type="submit"
+          data-testid="signup-button"
+          disabled={loginButtonDisable}
+        >
+          로그인
+        </button>
       </form>
     </>
   );
