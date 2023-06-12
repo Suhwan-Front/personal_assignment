@@ -40,21 +40,6 @@ const Main = () => {
           <Link to="/signin">
             <div>로그인 페이지로 이동</div>
           </Link>
-          <div>경로 접속시 리다이렉션 확인용</div>
-          {location.pathname === '/' && (
-            <>
-              <Link to="/todo">
-                <div>투두리스트 페이지로 이동</div>
-              </Link>
-              <div>경로 접속시 리다이렉션 확인용</div>
-              <Link to="/signup">
-                <div>회원가입 페이지로 이동</div>
-              </Link>
-              <Link to="/signin">
-                <div>로그인 페이지로 이동</div>
-              </Link>
-            </>
-          )}
         </>
       )}
     </>

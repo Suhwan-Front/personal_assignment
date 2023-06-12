@@ -1,13 +1,12 @@
-/* eslint-disable prefer-destructuring */
-import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [email, setLoginEmail] = useState('');
   const [password, setLoginPassword] = useState('');
   const [loginButtonDisable, setLoginButtonDisable] = useState(true);
-  const navigate = useNavigate();
 
   const checkLoginForm = () => {
     const loginEmailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -21,11 +20,11 @@ const SignIn = () => {
       alert('이미 로그인 하셨습니다!');
       navigate('/');
     }
-  });
+  }, [navigate]);
 
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
-    console.log(`로컬 스토리지에 저장 : ${jwt}`);
+    console.log(`로컬 스토리지에 저장: ${jwt}`);
   }, []);
 
   useEffect(() => {
@@ -50,15 +49,16 @@ const SignIn = () => {
           },
         },
       );
-      console.log(`서버로부터 응답 : ${response.data}`);
+
+      console.log(`서버로부터 응답: ${response.data}`);
       const jwt = response.data.access_token;
 
       if (jwt) {
         localStorage.setItem('jwt', jwt);
-        console.log(`로컬 스토리지 저장 : ${localStorage.getItem('jwt')}`);
+        console.log(`로컬 스토리지 저장: ${localStorage.getItem('jwt')}`);
         navigate('/');
       } else {
-        console.error('JWT 값을 가져오지 못했음');
+        console.error('JWT 값을 가져오지 못했습니다.');
       }
     } catch (error) {
       console.error(error);
