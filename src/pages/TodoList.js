@@ -113,6 +113,34 @@ const TodoList = () => {
     }
   };
 
+  const handleToggleComplete = async (id, isCompleted) => {
+    const accessToken = localStorage.getItem('jwt');
+
+    const updatedIsCompleted = !isCompleted; // 현재 값의 반대로 변경
+
+    const todoUpdate = {
+      todo: todos.find(todo => todo.id === id).todo,
+      isCompleted: updatedIsCompleted,
+    };
+
+    try {
+      const response = await axios.put(
+        `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
+        todoUpdate,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log(`응답 내용 : ${JSON.stringify(response.data)}`);
+      fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <Link to="/">메인 페이지</Link>
@@ -144,7 +172,9 @@ const TodoList = () => {
                 <input
                   type="checkbox"
                   checked={todo.isCompleted}
-                  onChange={() => {}}
+                  onChange={() =>
+                    handleToggleComplete(todo.id, todo.isCompleted)
+                  }
                 />
                 <span>{todo.todo}</span>
                 <button onClick={() => handleStartEdit(todo.id, todo.todo)}>
