@@ -31,6 +31,9 @@ const Main = () => {
         <>
           <div>로그인 중입니다.</div>
           <button onClick={handleLogout}>로그아웃</button>
+          <Link to="/todo">
+            <div>투두리스트</div>
+          </Link>
         </>
       ) : (
         <>
