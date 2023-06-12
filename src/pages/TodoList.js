@@ -11,11 +11,14 @@ const TodoList = () => {
   const fetchTodos = async () => {
     const accessToken = localStorage.getItem('jwt');
     try {
-      const responseGet = await axios.get('http://localhost:8000/todos', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      const responseGet = await axios.get(
+        'https://www.pre-onboarding-selection-task.shop/todos',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      });
+      );
 
       console.log(`응답: ${JSON.stringify(responseGet.data)}`);
       setTodos(responseGet.data);
@@ -36,7 +39,7 @@ const TodoList = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/todos',
+        'https://www.pre-onboarding-selection-task.shop/todos',
         todoData,
         {
           headers: {
@@ -63,7 +66,7 @@ const TodoList = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/todos/${id}`,
+        `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
         todoUpdate,
         {
           headers: {
@@ -95,11 +98,14 @@ const TodoList = () => {
     const accessToken = localStorage.getItem('jwt');
 
     try {
-      const response = await axios.delete(`http://localhost:8000/todos/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      const response = await axios.delete(
+        `https://www.pre-onboarding-selection-task.shop/todos/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      });
+      );
       console.log(`응답 내용 : ${JSON.stringify(response.data)}`);
       fetchTodos();
     } catch (error) {

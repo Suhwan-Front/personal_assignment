@@ -37,7 +37,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/auth/signup',
+        'https://www.pre-onboarding-selection-task.shop/auth/signup',
         data,
         {
           headers: {
