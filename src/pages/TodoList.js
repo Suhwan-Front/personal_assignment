@@ -1,29 +1,29 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-console */
 import axios from 'axios';
 import {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [editTodoId, setEditTodoId] = useState(null);
+  const [editTodoText, setEditTodoText] = useState('');
 
+  const fetchTodos = async () => {
+    const accessToken = localStorage.getItem('jwt');
+    try {
+      const responseGet = await axios.get('http://localhost:8000/todos', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log(`응답: ${JSON.stringify(responseGet.data)}`);
+      setTodos(responseGet.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchTodos = async () => {
-      const accessToken = localStorage.getItem('jwt');
-      try {
-        const responseGet = await axios.get('http://localhost:8000/todos', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        console.log(`응답: ${JSON.stringify(responseGet.data)}`);
-        setTodos(responseGet.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchTodos();
   }, []);
 
@@ -53,8 +53,63 @@ const TodoList = () => {
     setNewTodo('');
   };
 
+  const handleUpdateTodo = async id => {
+    const accessToken = localStorage.getItem('jwt');
+
+    const todoUpdate = {
+      todo: editTodoText,
+      isCompleted: todos.find(todo => todo.id === id).isCompleted,
+    };
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/todos/${id}`,
+        todoUpdate,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log(`응답 내용 : ${JSON.stringify(response.data)}`);
+      fetchTodos();
+      setEditTodoId(null);
+      setEditTodoText('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditTodoId(null);
+    setEditTodoText('');
+  };
+
+  const handleStartEdit = (todoId, todoText) => {
+    setEditTodoId(todoId);
+    setEditTodoText(todoText);
+  };
+
+  const handleDeleteTodo = async id => {
+    const accessToken = localStorage.getItem('jwt');
+
+    try {
+      const response = await axios.delete(`http://localhost:8000/todos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(`응답 내용 : ${JSON.stringify(response.data)}`);
+      fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
+      <Link to="/">메인 페이지</Link>
       <div>투두 리스트 페이지</div>
       <input
         type="text"
@@ -68,12 +123,31 @@ const TodoList = () => {
       <ul>
         {todos.map(todo => (
           <li key={todo.id}>
-            <label>
-              <input type="checkbox" />
-              <span>{todo.todo}</span>
-              <button>수정</button>
-              <button>삭제</button>
-            </label>
+            {editTodoId === todo.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editTodoText}
+                  onChange={e => setEditTodoText(e.target.value)}
+                />
+                <button onClick={() => handleUpdateTodo(todo.id)}>제출</button>
+                <button onClick={handleCancelEdit}>취소</button>
+              </>
+            ) : (
+              <>
+                <input
+                  type="checkbox"
+                  checked={todo.isCompleted}
+                  onChange={() => {}}
+                />
+                <span>{todo.todo}</span>
+                <button onClick={() => handleStartEdit(todo.id, todo.todo)}>
+                  수정
+                </button>
+                <button onClick={() => handleDeleteTodo(todo.id)}>삭제</button>
+              </>
+            )}
+            <label></label>
           </li>
         ))}
       </ul>

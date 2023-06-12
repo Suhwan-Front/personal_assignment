@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import React, {useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';

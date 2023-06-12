@@ -1,6 +1,4 @@
-/* eslint-disable no-alert */
 /* eslint-disable prefer-destructuring */
-/* eslint-disable no-console */
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
